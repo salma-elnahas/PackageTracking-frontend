@@ -1,0 +1,45 @@
+<h2>Create account</h2>
+
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <label>
+    Name
+    <input type="text" formControlName="name" />
+  </label>
+  @if (form.controls.name.touched && form.controls.name.invalid) {
+    <p class="error">Name is required.</p>
+  }
+
+  <label>
+    Email
+    <input type="email" formControlName="email" />
+  </label>
+  @if (form.controls.email.touched && form.controls.email.invalid) {
+    <p class="error">Enter a valid email address.</p>
+  }
+
+  <label>
+    Phone
+    <input type="tel" formControlName="phone" />
+  </label>
+  @if (form.controls.phone.touched && form.controls.phone.invalid) {
+    <p class="error">Phone is required.</p>
+  }
+
+  <label>
+    Password
+    <input type="password" formControlName="password" />
+  </label>
+  @if (form.controls.password.touched && form.controls.password.invalid) {
+    <p class="error">Password must be at least 6 characters.</p>
+  }
+
+  @if (error) {
+    <p class="error">{{ error }}</p>
+  }
+
+  <button type="submit" [disabled]="loading">
+    {{ loading ? 'Creating account...' : 'Register' }}
+  </button>
+</form>
+
+<p>Already have an account? <a routerLink="/login">Login</a></p>
