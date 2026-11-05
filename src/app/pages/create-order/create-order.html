@@ -1,0 +1,76 @@
+
+<h2>Create Order</h2>
+
+<form [formGroup]="form" (ngSubmit)="submit()">
+
+  <label>
+    Pickup location
+    <input
+      type="text"
+      formControlName="pickupLocation"
+      placeholder="e.g. 12 Tahrir St, Cairo"
+    />
+  </label>
+
+  @if (form.controls.pickupLocation.touched && form.controls.pickupLocation.invalid) {
+    <p class="error">Pickup location is required (at least 3 characters).</p>
+  }
+
+  <label>
+    Drop-off location
+    <input
+      type="text"
+      formControlName="dropoffLocation"
+      placeholder="Customer address"
+    />
+  </label>
+
+  @if (form.controls.dropoffLocation.touched && form.controls.dropoffLocation.invalid) {
+    <p class="error">Drop-off location is required (at least 3 characters).</p>
+  }
+
+  <label>
+    Package details
+    <textarea
+      rows="3"
+      formControlName="packageDetails"
+      placeholder="What is in the package? Size, weight, notes..."
+    ></textarea>
+  </label>
+
+  @if (form.controls.packageDetails.touched && form.controls.packageDetails.invalid) {
+    <p class="error">Package details are required (at least 3 characters).</p>
+  }
+
+  <label>
+    Delivery day
+    <input
+      type="text"
+      formControlName="deliveryDate"
+      placeholder="DD/MM/YYYY, e.g. 06/11/2026"
+    />
+  </label>
+
+  @if (form.controls.deliveryDate.touched) {
+    @if (form.controls.deliveryDate.errors?.['required']) {
+      <p class="error">Enter a delivery day.</p>
+    }
+
+    @if (form.controls.deliveryDate.errors?.['invalidDay']) {
+      <p class="error">Invalid date. Please enter a real date (DD/MM/YYYY).</p>
+    }
+
+    @if (form.controls.deliveryDate.errors?.['pastDate']) {
+      <p class="error">Delivery day must be tomorrow or later.</p>
+    }
+  }
+
+  @if (error) {
+    <p class="error">{{ error }}</p>
+  }
+
+  <button type="submit" [disabled]="loading">
+    {{ loading ? 'Creating order...' : 'Create order' }}
+  </button>
+
+</form>
