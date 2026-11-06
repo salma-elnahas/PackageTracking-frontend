@@ -17,12 +17,12 @@
     <p class="error">Password is required.</p>
   }
 
-  @if (error) {
-    <p class="error">{{ error }}</p>
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
   }
 
-  <button type="submit" [disabled]="loading">
-    {{ loading ? 'Logging in...' : 'Login' }}
+  <button type="submit" [disabled]="loading()">
+    {{ loading() ? 'Logging in...' : 'Login' }}
   </button>
 </form>
 

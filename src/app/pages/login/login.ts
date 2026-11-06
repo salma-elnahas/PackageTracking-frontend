@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth';
@@ -14,8 +14,9 @@ export class Login {
   private auth = inject(AuthService);
   private router = inject(Router);
 
-  error = '';
-  loading = false;
+  // signals so the screen updates after the server replies (the app is zoneless)
+  error = signal('');
+  loading = signal(false);
 
   form = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
@@ -27,8 +28,8 @@ export class Login {
       this.form.markAllAsTouched();
       return;
     }
-    this.loading = true;
-    this.error = '';
+    this.loading.set(true);
+    this.error.set('');
 
     this.auth.login(this.form.getRawValue()).subscribe({
       next: (res) => {
@@ -42,8 +43,8 @@ export class Login {
       },
 
       error: (err) => {
-        this.loading = false;
-        this.error = err.error?.message ?? 'Login failed. Please try again.';
+        this.loading.set(false);
+        this.error.set(err.error?.message ?? 'Login failed. Please try again.');
       },
     });
   }

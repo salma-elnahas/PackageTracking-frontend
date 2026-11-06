@@ -1,0 +1,19 @@
+<nav class="navbar">
+  <a class="brand" [routerLink]="home()">Package Tracking</a>
+
+  <div class="links">
+    @for (link of links(); track link.path) {
+      <a [routerLink]="link.path" routerLinkActive="active">{{ link.label }}</a>
+    }
+  </div>
+
+  <div class="account">
+    @if (user(); as u) {
+      <span class="who">{{ u.name }} <small>({{ u.role }})</small></span>
+      <button (click)="logout()">Logout</button>
+    } @else {
+      <a routerLink="/login" routerLinkActive="active">Login</a>
+      <a routerLink="/register" routerLinkActive="active">Register</a>
+    }
+  </div>
+</nav>

@@ -1,0 +1,60 @@
+<div class="page">
+  <h1>Assigned Orders</h1>
+  <p class="subtitle">Accept new deliveries and update their status as you go.</p>
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  @if (loading()) {
+    <p>Loading your orders...</p>
+  } @else if (orders().length === 0 && !error()) {
+    <div class="empty">
+      <h2>No assigned orders</h2>
+      <p>When an admin assigns you a delivery, it will show up here.</p>
+    </div>
+  } @else {
+    @for (order of orders(); track order._id) {
+      <div class="card">
+        <div class="card-head">
+          <h2>Order #{{ order._id.slice(-6) }}</h2>
+          <span class="badge" [class]="'badge ' + statusClass(order.status)">{{ order.status }}</span>
+        </div>
+
+        <p><strong>Customer:</strong> {{ personLabel(order.user) }}</p>
+        <p><strong>Pickup:</strong> {{ order.pickupLocation }}</p>
+        <p><strong>Drop-off:</strong> {{ order.dropoffLocation }}</p>
+        <p><strong>Package:</strong> {{ order.packageDetails }}</p>
+        <p><strong>Delivery day:</strong> {{ order.deliveryTime | date: 'dd/MM/yyyy' }}</p>
+
+        @if (order.statusHistory.length) {
+          <details>
+            <summary>Status history</summary>
+            <ul>
+              @for (h of order.statusHistory; track $index) {
+                <li>{{ h.status }} — {{ h.at | date: 'dd/MM/yyyy, h:mm a' }}</li>
+              }
+            </ul>
+          </details>
+        }
+
+        <div class="actions">
+          @if (order.status === 'Pending') {
+            <button (click)="accept(order)" [disabled]="busyId() === order._id">Accept</button>
+            <button class="secondary" (click)="decline(order)" [disabled]="busyId() === order._id">
+              Decline
+            </button>
+          } @else if (nextStatus[order.status]; as next) {
+            <button (click)="advance(order)" [disabled]="busyId() === order._id">
+              Mark as {{ next }}
+            </button>
+          } @else if (order.status === 'Delivered') {
+            <span class="done">Delivered ✓</span>
+          } @else if (order.status === 'Declined') {
+            <span class="muted">You declined this order. Waiting for the admin to reassign it.</span>
+          }
+        </div>
+      </div>
+    }
+  }
+</div>
