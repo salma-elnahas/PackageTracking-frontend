@@ -1,1 +1,37 @@
-<p>order-details works!</p>
+<div class="container">
+  <button class="link" (click)="back()">← Back</button>
+  <h2>Order Details</h2>
+
+  @if (loading()) { <p>Loading...</p> }
+  @if (error()) { <div class="alert error">{{ error() }}</div> }
+  @if (success()) { <div class="alert success">{{ success() }}</div> }
+
+  @if (order(); as o) {
+    <p><strong>Status:</strong> <span class="badge">{{ o.status }}</span></p>
+    <p><strong>Pickup:</strong> {{ o.pickupLocation }}</p>
+    <p><strong>Drop-off:</strong> {{ o.dropoffLocation }}</p>
+    <p><strong>Package:</strong> {{ o.packageDetails }}</p>
+    <p><strong>Delivery time:</strong> {{ o.deliveryTime | date:'medium' }}</p>
+    <p><strong>Created:</strong> {{ o.createdAt | date:'medium' }}</p>
+
+    <h3>Courier</h3>
+    @if (courier(); as c) {
+      <p>{{ c.name }} · {{ c.phone }} · {{ c.email }}</p>
+    } @else {
+      <p>Not assigned yet</p>
+    }
+
+    <h3>Status history</h3>
+    <ul>
+      @for (h of o.statusHistory; track $index) {
+        <li>{{ h.status }}: {{ h.at | date:'short' }}</li>
+      }
+    </ul>
+
+    @if (o.status === 'Pending') {
+      <button (click)="cancel()" [disabled]="cancelling()">
+        {{ cancelling() ? 'Cancelling...' : 'Cancel order' }}
+      </button>
+    }
+  }
+</div>

@@ -1,1 +1,56 @@
-<p>manage-orders works!</p>
+<!-- Manage Orders page (Feature 9, admin only) -->
+<div class="container">
+  <h2>Manage Orders</h2>
+
+  <!-- Messages: each one only shows when its signal is not empty -->
+  @if (error()) { <div class="alert error">{{ error() }}</div> }
+  @if (success()) { <div class="alert success">{{ success() }}</div> }
+  @if (loading()) { <p>Loading...</p> }
+
+  <!-- Empty state when there are no orders -->
+  @if (!loading() && orders().length === 0) {
+    <p>No orders yet.</p>
+  } @else if (!loading()) {
+
+    <table>
+      <thead>
+        <tr>
+          <th>Customer</th>
+          <th>Pickup → Drop-off</th>
+          <th>Courier</th>
+          <th>Created</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <!-- One row per order; track by _id so Angular only redraws changed rows -->
+        @for (o of orders(); track o._id) {
+          <tr>
+            <!-- name() shows the populated name, or "—" -->
+            <td>{{ name(o.user) }}</td>
+            <td>{{ o.pickupLocation }} → {{ o.dropoffLocation }}</td>
+            <td>{{ name(o.courier) }}</td>
+            <td>{{ o.createdAt | date:'short' }}</td>
+
+            <!-- Status dropdown -->
+            <td>
+                <select (change)="updateStatus(o, $any($event.target).value)">
+                    @for (s of statuses; track s) {
+                        <option [value]="s" [selected]="s === o.status">{{ s }}</option>
+                    }
+                </select>
+            </td>
+
+            <!--open the details page, or delete the order -->
+            <td>
+              <a [routerLink]="['/orders', o._id]">View</a>
+              <button (click)="deleteOrder(o)">Delete</button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

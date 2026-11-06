@@ -64,7 +64,9 @@
       <p>
         <strong>Delivery day:</strong>
         {{ order.deliveryTime | date:'dd/MM/yyyy' }}
+        
       </p>
+      <a [routerLink]="['/orders', order._id]" class="details-link">View details →</a>
 
       <hr>
 
