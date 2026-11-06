@@ -65,12 +65,12 @@
     }
   }
 
-  @if (error) {
-    <p class="error">{{ error }}</p>
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
   }
 
-  <button type="submit" [disabled]="loading">
-    {{ loading ? 'Creating order...' : 'Create order' }}
+  <button type="submit" [disabled]="loading()">
+    {{ loading() ? 'Creating order...' : 'Create order' }}
   </button>
 
 </form>

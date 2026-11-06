@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -44,8 +44,9 @@ export class CreateOrder {
   private orders = inject(OrderService);
   private router = inject(Router);
 
-  error = '';
-  loading = false;
+  // signals so the screen updates after the server replies (the app is zoneless)
+  error = signal('');
+  loading = signal(false);
 
   form = this.fb.nonNullable.group({
     pickupLocation: ['', [Validators.required, Validators.minLength(3)]],
@@ -59,8 +60,8 @@ export class CreateOrder {
       this.form.markAllAsTouched();
       return;
     }
-    this.loading = true;
-    this.error = '';
+    this.loading.set(true);
+    this.error.set('');
 
     const v = this.form.getRawValue();
     this.orders
@@ -73,8 +74,8 @@ export class CreateOrder {
       .subscribe({
         next: () => this.router.navigateByUrl('/my-orders'),
         error: (err) => {
-          this.loading = false;
-          this.error = err.error?.message ?? 'Could not create the order. Please try again.';
+          this.loading.set(false);
+          this.error.set(err.error?.message ?? 'Could not create the order. Please try again.');
         },
       });
   }

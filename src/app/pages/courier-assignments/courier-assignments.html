@@ -1,0 +1,78 @@
+<div class="page">
+  <h1>Courier Assignments</h1>
+  <p class="subtitle">Assign couriers to orders, or reassign ones that were declined.</p>
+
+  <div class="toolbar">
+    <label class="check">
+      <input type="checkbox" [checked]="showClosed()" (change)="toggleClosed($event)" />
+      Show delivered and cancelled orders
+    </label>
+    <button class="secondary" (click)="load()" [disabled]="loading()">Refresh</button>
+  </div>
+
+  @if (message()) {
+    <p class="message">{{ message() }}</p>
+  }
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  @if (loading()) {
+    <p>Loading orders...</p>
+  } @else if (visibleOrders().length === 0 && !error()) {
+    <p>No orders to show.</p>
+  } @else {
+    @if (couriers().length === 0) {
+      <p class="error">No couriers found. Register a user with the courier role first.</p>
+    }
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Order</th>
+            <th>Customer</th>
+            <th>Route</th>
+            <th>Delivery day</th>
+            <th>Status</th>
+            <th>Current courier</th>
+            <th>Assign to</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (order of visibleOrders(); track order._id) {
+            <tr [class.attention]="needsCourier(order) && isAssignable(order)">
+              <td>#{{ order._id.slice(-6) }}</td>
+              <td>{{ personLabel(order.user) }}</td>
+              <td>{{ order.pickupLocation }} → {{ order.dropoffLocation }}</td>
+              <td>{{ order.deliveryTime | date: 'dd/MM/yyyy' }}</td>
+              <td>
+                <span [class]="'badge ' + statusClass(order.status)">{{ order.status }}</span>
+              </td>
+              <td>{{ personLabel(order.courier) }}</td>
+              <td>
+                @if (!isAssignable(order)) {
+                  <span class="muted">{{ isClosed(order) ? '—' : 'Out for delivery' }}</span>
+                } @else {
+                  <div class="assign">
+                    <select [value]="selectedFor(order)" (change)="pick(order, $event)">
+                      <option value="">Choose courier</option>
+                      @for (c of couriers(); track c._id) {
+                        <option [value]="c._id">{{ c.name }}</option>
+                      }
+                    </select>
+                    <button
+                      (click)="assign(order)"
+                      [disabled]="!canAssign(order) || busyId() === order._id"
+                    >
+                      {{ order.courier ? 'Reassign' : 'Assign' }}
+                    </button>
+                  </div>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

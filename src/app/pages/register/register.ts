@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth';
@@ -14,8 +14,9 @@ export class Register {
   private auth = inject(AuthService);
   private router = inject(Router);
 
-  error = '';
-  loading = false;
+  // signals so the screen updates after the server replies (the app is zoneless)
+  error = signal('');
+  loading = signal(false);
 
   form = this.fb.nonNullable.group({
     name: ['', Validators.required],
@@ -29,14 +30,14 @@ export class Register {
       this.form.markAllAsTouched();
       return;
     }
-    this.loading = true;
-    this.error = '';
+    this.loading.set(true);
+    this.error.set('');
 
     this.auth.register(this.form.getRawValue()).subscribe({
       next: () => this.router.navigateByUrl('/login'),
       error: err => {
-        this.loading = false;
-        this.error = err.error?.message ?? 'Registration failed. Please try again.';
+        this.loading.set(false);
+        this.error.set(err.error?.message ?? 'Registration failed. Please try again.');
       }
     });
   }

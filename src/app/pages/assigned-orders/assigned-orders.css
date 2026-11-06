@@ -1,0 +1,87 @@
+.page {
+  max-width: 900px;
+  margin: 35px auto;
+  padding: 0 24px;
+  font-family: Georgia, serif;
+}
+h1 {
+  font-size: 36px;
+  margin: 0 0 8px;
+}
+.subtitle {
+  font-size: 19px;
+  margin: 0 0 24px;
+}
+.card {
+  border: 1px solid #ddd;
+  border-radius: 9px;
+  padding: 18px 22px;
+  margin-bottom: 20px;
+  background: #fff;
+}
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.card h2 {
+  font-size: 23px;
+  margin: 0 0 10px;
+}
+.card p {
+  margin: 7px 0;
+  font-size: 16px;
+}
+.badge {
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 14px;
+  background: #eee;
+}
+.pending { background: #fff4cc; }
+.accepted { background: #dbeafe; }
+.picked-up { background: #e0e7ff; }
+.in-transit { background: #ede9fe; }
+.delivered { background: #dcfce7; }
+.declined,
+.cancelled { background: #fee2e2; }
+details {
+  margin: 10px 0;
+}
+summary {
+  cursor: pointer;
+}
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+button {
+  background: #2861ed;
+  color: #fff;
+  border: none;
+  padding: 9px 16px;
+  border-radius: 7px;
+  font: inherit;
+  cursor: pointer;
+}
+button.secondary {
+  background: #fff;
+  color: #b42318;
+  border: 1px solid #b42318;
+}
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.done {
+  color: #15803d;
+  font-weight: bold;
+}
+.error {
+  color: #c0392b;
+}
+.muted {
+  color: #777;
+}

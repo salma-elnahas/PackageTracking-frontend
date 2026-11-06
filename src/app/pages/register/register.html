@@ -33,12 +33,12 @@
     <p class="error">Password must be at least 6 characters.</p>
   }
 
-  @if (error) {
-    <p class="error">{{ error }}</p>
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
   }
 
-  <button type="submit" [disabled]="loading">
-    {{ loading ? 'Creating account...' : 'Register' }}
+  <button type="submit" [disabled]="loading()">
+    {{ loading() ? 'Creating account...' : 'Register' }}
   </button>
 </form>
 
