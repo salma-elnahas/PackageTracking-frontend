@@ -31,16 +31,20 @@ export class Login {
     this.error = '';
 
     this.auth.login(this.form.getRawValue()).subscribe({
-      next: res => {
-        const dest = res.user.role === 'admin' ? '/manage-orders'
-          : res.user.role === 'courier' ? '/assigned-orders'
-          : '/my-orders';
+      next: (res) => {
+        const dest =
+          res.user.role === 'admin'
+            ? '/manage-orders'
+            : res.user.role === 'courier'
+              ? '/assigned-orders'
+              : '/my-orders';
         this.router.navigateByUrl(dest);
       },
-      error: err => {
+
+      error: (err) => {
         this.loading = false;
         this.error = err.error?.message ?? 'Login failed. Please try again.';
-      }
+      },
     });
   }
 }

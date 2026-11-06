@@ -1,0 +1,75 @@
+
+<div class="orders-container">
+
+  <h1>My Orders</h1>
+  <p class="subtitle">Track and manage your package deliveries.</p>
+
+  <div class="page-actions">
+  <span class="orders-count">
+    Count: {{ orders().length }} Orders
+  </span>
+
+    <a routerLink="/create-order" class="create-order-btn">
+      + Create New Order
+    </a>
+  </div>
+
+  <!-- Loading -->
+  <p *ngIf="loading()">Loading your orders...</p>
+
+  <!-- Error -->
+  <div *ngIf="!loading() && error()">
+    <p>{{ error() }}</p>
+    <button (click)="load()">Try Again</button>
+  </div>
+
+  <!-- Empty orders -->
+  <div *ngIf="!loading() && !error() && orders().length === 0">
+    <h2>No orders yet</h2>
+    <p>You haven't created any orders yet.</p>
+  </div>
+
+  <!-- Orders list -->
+  <div *ngIf="!loading() && !error() && orders().length > 0">
+
+    <div class="order-card" *ngFor="let order of orders()">
+
+      <h2>Order #{{ order._id.slice(-6) }}</h2>
+
+      <p>
+        <strong>Created:</strong>
+        {{ order.createdAt | date:'medium' }}
+      </p>
+
+      <p>
+        <strong>Status:</strong>
+        {{ order.status }}
+      </p>
+
+      <p>
+        <strong>Pickup location:</strong>
+        {{ order.pickupLocation }}
+      </p>
+
+      <p>
+        <strong>Drop-off location:</strong>
+        {{ order.dropoffLocation }}
+      </p>
+
+      <p>
+        <strong>Package details:</strong>
+        {{ order.packageDetails }}
+      </p>
+
+      <p>
+        <strong>Delivery day:</strong>
+        {{ order.deliveryTime | date:'dd/MM/yyyy' }}
+      </p>
+
+      <hr>
+
+    </div>
+
+  </div>
+
+</div>
